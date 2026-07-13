@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,9 +21,9 @@ export function Navbar() {
         <div className="hidden md:flex items-center gap-8 font-bold">
           <a href="/planos" className="hover:text-destaque transition-colors uppercase text-sm tracking-widest">Planos</a>
           <a href="/seguros" className="hover:text-destaque transition-colors uppercase text-sm tracking-widest">Seguros</a>
-          <button className="bg-white text-morte px-6 py-2 rounded-sm font-black uppercase hover:bg-white transition-all transform hover:scale-105 shadow-md">
-            Login
-          </button>
+          <Link to="/login" className="bg-white text-morte px-6 py-2 rounded-sm font-black uppercase hover:bg-white transition-all transform hover:scale-105 shadow-md">
+          Login
+        </Link>
         </div>
 
         {/* Botão Mobile */}
@@ -36,7 +37,7 @@ export function Navbar() {
         <div className="md:hidden bg-morte border-t border-destaque p-6 flex flex-col gap-4 text-center">
           <a href="/planos" className="block py-2 font-bold uppercase">Planos</a>
           <a href="/faq" className="block py-2 font-bold uppercase">Dúvidas</a>
-          <button className="bg-destaque text-morte py-3 font-black uppercase">Login</button>
+          <Link to="/login" className="block bg-destaque text-morte py-3 font-black uppercase">Login</Link>
         </div>
       )}
     </nav>
