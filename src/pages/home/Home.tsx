@@ -19,9 +19,9 @@ export default function Home() {
             Contrate o seguro que garante que sua partida seja tão tranquila quanto uma soneca.
           </p>
           
-          <button className="bg-vida text-white px-12 py-5 text-lg font-black uppercase rounded-sm hover:bg-morte transition-all hover:scale-105 shadow-lg border-b-4 border-green-800">
-            Garantir minha tranquilidade
-          </button>
+           <a href="/cadastrar-usuario" className="bg-vida text-white px-12 py-5 text-lg font-black uppercase rounded-sm hover:bg-morte transition-all hover:scale-105 shadow-lg border-b-4 border-green-800">
+             Garantir minha tranquilidade
+            </a>
         </section>
 
         {/* O Fluxo de Partida */}
