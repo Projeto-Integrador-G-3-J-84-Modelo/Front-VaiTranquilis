@@ -6,7 +6,9 @@ export function Footer() {
 
         {/* Bloco do Logo */}
         <div className="text-center mb-4 border-b border-white/10 pb-3">
-          <div className="text-5xl mb-1">⚰️</div>
+          <div className="flex justify-center mb-1">
+            <img src="/skeletin01.png" alt="Logo" className="w-12 h-12" />
+          </div>
           <p className="font-black text-3xl uppercase italic tracking-tighter">VaiTranquilis</p>
           <p className="text-sm opacity-60 mt-2 italic">"Onde a tranquilidade encontra o seu destino final."</p>
         </div>

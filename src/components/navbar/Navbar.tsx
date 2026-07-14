@@ -7,11 +7,15 @@ export function Navbar() {
 
   return (
     <nav className="bg-morte text-white border-b-4 border-destaque shadow-2xl relative z-50">
-     
+
       <div className="max-w-7xl mx-auto px-6 h-20 flex justify-between items-center">
         {/* Logo */}
         <a href="/" className="flex items-center gap-3 group">
-          <span className="text-3xl transition-transform duration-500 group-hover:-rotate-12">⚰️</span>
+          <img
+            src="/skeletin01.png"
+            alt="Logo"
+            className="w-10 h-10 transition-transform duration-500 group-hover:-rotate-12"
+          />
           <span className="text-2xl font-black tracking-tighter uppercase italic group-hover:text-destaque transition-colors">
             VaiTranquilis
           </span>
@@ -19,16 +23,16 @@ export function Navbar() {
 
         {/* Links Desktop */}
         <div className="hidden md:flex items-center gap-8 font-bold">
-        {/* alterei apenas o link de planos para ficar bonitinho */}
-  <a href="/planos" className="inline-block hover:text-destaque transition-all hover:scale-105 uppercase text-sm tracking-widest cursor-pointer">
-          Planos
-         </a>
+          {/* alterei apenas o link de planos para ficar bonitinho */}
+          <a href="/planos" className="inline-block hover:text-destaque transition-all hover:scale-105 uppercase text-sm tracking-widest cursor-pointer">
+            Planos
+          </a>
           <a href="/seguros" className="inline-block hover:text-destaque transition-all hover:scale-105 uppercase text-sm tracking-widest cursor-pointer">
-          Seguros
-         </a>
+            Seguros
+          </a>
           <Link to="/login" className="bg-white text-morte px-6 py-2 rounded-sm font-black uppercase hover:bg-white transition-all transform hover:scale-105 shadow-md">
-          Login
-        </Link>
+            Login
+          </Link>
         </div>
 
         {/* Botão Mobile */}
