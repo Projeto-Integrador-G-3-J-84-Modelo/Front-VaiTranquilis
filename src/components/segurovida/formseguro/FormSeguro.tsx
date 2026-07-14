@@ -62,18 +62,32 @@ function FormSeguro() {
     const valorDefinido = planoSelecionado ? 600 : 0; // Ajuste sua lógica aqui!
 
     const seguro = {
-      id: editando ? String(id) : String(Date.now()),
-      usuarioId: String(usuarioId),
-      planoSeguroId: String(planoId),
-      valorMensalidade: valorDefinido, // Usa o valor real aqui
-      dataContratacao: new Date().toISOString().split('T')[0]
+      usuario: {
+        id: Number(usuarioId),
+      },
+      planoSeguro: {
+        id: Number(planoId),
+      },
     };
 
     try {
       if (editando) {
-        await atualizar<typeof seguro, SeguroVida>(`/seguros/${id}`, seguro, () => { });
+        const seguroAtualizado = {
+          id: Number(id),
+          ...seguro,
+        };
+
+        await atualizar<typeof seguroAtualizado, SeguroVida>(
+          "/seguros/atualizar",
+          seguroAtualizado,
+          () => { }
+        );
       } else {
-        await cadastrar<typeof seguro, SeguroVida>("/seguros", seguro, () => { });
+        await cadastrar<typeof seguro, SeguroVida>(
+          "/seguros/cadastrar",
+          seguro,
+          () => { }
+        );
       }
       navigate("/seguros");
     } catch {
