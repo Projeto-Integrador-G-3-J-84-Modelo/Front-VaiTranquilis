@@ -3,7 +3,8 @@ import type { ChangeEvent, FormEvent } from "react";
 import { Link } from "react-router-dom";
 import CardSeguro from "../cardseguro/CardSeguro";
 import type SeguroVida from "../../../models/SeguroVida";
-import { buscar } from "../../../services/Service";
+import { buscarPuro } from "../../../services/Service";
+
 
 function ListarSeguros() {
   const [seguros, setSeguros] = useState<SeguroVida[]>([]);
@@ -16,22 +17,25 @@ function ListarSeguros() {
   async function carregarSeguros() {
     try {
       setCarregando(true);
+      setErro(""); // Limpa erros anteriores
 
-      // 1. Criamos variáveis locais para receber os dados
-      let segurosDados: any[] = [];
-      let usuariosDados: any[] = [];
-      let planosDados: any[] = [];
+      // 1. Buscamos os dados diretamente de forma paralela e limpa
+      const [segurosDados, usuariosDados, planosDados] = await Promise.all([
+        buscarPuro("/seguros"),
+        buscarPuro("/usuarios"),
+        buscarPuro("/planos")
+      ]);
 
-      // 2. Usamos o seu Service.ts para buscar os dados
-      await buscar("/seguros", (dados: any[]) => segurosDados = dados);
-      await buscar("/usuarios", (dados: any[]) => usuariosDados = dados);
-      await buscar("/planos", (dados: any[]) => planosDados = dados);
+      // 2. Segurança: Garante que se a API retornar nulo ou vazio, tratamos como array
+      const listaSeguros = Array.isArray(segurosDados) ? segurosDados : [];
+      const listaUsuarios = Array.isArray(usuariosDados) ? usuariosDados : [];
+      const listaPlanos = Array.isArray(planosDados) ? planosDados : [];
 
-      // 3. Montagem manual (O Join)
-      const segurosComDados = segurosDados.map((seguro) => ({
+      // 3. Montagem manual (O Join) usando os dados reais retornados
+      const segurosComDados = listaSeguros.map((seguro) => ({
         ...seguro,
-        usuario: usuariosDados.find((u) => String(u.id) === String(seguro.usuarioId)),
-        plano: planosDados.find((p) => String(p.id) === String(seguro.planoSeguroId))
+        usuario: listaUsuarios.find((u) => String(u?.id) === String(seguro?.usuarioId)),
+        plano: listaPlanos.find((p) => String(p?.id) === String(seguro?.planoSeguroId))
       }));
 
       setSeguros(segurosComDados);
@@ -39,6 +43,8 @@ function ListarSeguros() {
 
     } catch (error) {
       setErro("Não foi possível carregar os seguros.");
+      setSeguros([]);       // Proteção contra tela em branco
+      setListaOriginal([]); // Proteção contra tela em branco
     } finally {
       setCarregando(false);
     }
@@ -84,17 +90,6 @@ function ListarSeguros() {
     setSeguros(listaOriginal); // Restaura a lista original sem precisar buscar no servidor
   }
 
-  if (carregando) {
-    return (
-      <div className="bg-fundo min-h-screen text-texto">
-        <main className="max-w-5xl mx-auto px-6 py-20">
-          <p className="text-xl font-bold animate-pulse text-morte text-center">
-            Carregando seguros contratados...
-          </p>
-        </main>
-      </div>
-    );
-  }
 
   return (
     <div className="bg-fundo min-h-screen text-texto">
@@ -153,17 +148,16 @@ function ListarSeguros() {
             Limpar
           </button>
         </form>
-
-        {erro && (
+        {carregando ? (
+          <div className="text-center py-10">
+            <p className="text-xl font-bold animate-pulse text-morte">Carregando contratos de seguro...</p>
+          </div>
+        ) : erro ? (
           <p className="bg-red-100 text-red-700 p-4 rounded-sm font-bold text-sm text-center mb-8">
             {erro}
           </p>
-        )}
-
-        {seguros.length === 0 && !erro ? (
-          <p className="text-center text-texto/60 italic">
-            Nenhum seguro cadastrado ainda.
-          </p>
+        ) : !seguros || seguros.length === 0 ? ( // Correção aplicada aqui
+          <p className="text-center text-texto/60 italic">Nenhum seguro cadastrado ainda.</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {seguros.map((seguro) => (

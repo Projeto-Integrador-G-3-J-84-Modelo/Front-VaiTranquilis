@@ -11,8 +11,13 @@ import ListarSeguros from "./components/segurovida/listarseguros/ListarSeguros";
 import FormSeguro from "./components/segurovida/formseguro/FormSeguro";
 import DeletarSeguro from "./components/segurovida/deletarseguro/DeletarSeguro";
 
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
+
 export default function App() {
   return (
+    <>
+    <ToastContainer />
     <BrowserRouter>
       <div className="flex flex-col min-h-screen">
         <Navbar />
@@ -26,7 +31,6 @@ export default function App() {
             <Route path="/deletar-plano/:id" element={<DeletarPlano />} />
             <Route path="/cadastrar-usuario" element={<CadastrarUsuario />} />
             <Route path="/login" element={<LoginUsuario />} />
-
             <Route path="/seguros" element={<ListarSeguros />} />
             <Route path="/cadastrarSeguro" element={<FormSeguro />} />
             <Route path="/editarSeguro/:id" element={<FormSeguro />} />
@@ -37,5 +41,6 @@ export default function App() {
         <Footer />
       </div>
     </BrowserRouter>
+    </>
   );
 }

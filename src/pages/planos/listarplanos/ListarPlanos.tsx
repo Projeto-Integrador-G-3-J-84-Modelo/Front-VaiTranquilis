@@ -1,22 +1,28 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import CardPlano from '../cardplano/CardPlano';
-import { buscar } from '../../../services/Service';
+import { buscarPuro } from '../../../services/Service';
 import type PlanoSeguro from '../../../models/PlanoSeguro';
 
 export default function ListarPlanos() {
   const [planos, setPlanos] = useState<PlanoSeguro[]>([]);
   const [carregando, setCarregando] = useState(true);
-
+  const [erro, setErro] = useState("");
   const navigate = useNavigate();
 
   const buscarPlanos = async () => {
     try {
       setCarregando(true);
-      await buscar<PlanoSeguro[]>('/planos', setPlanos);
-    } catch (erro) {
-      console.error("Erro ao buscar planos:", erro);
-      alert("Erro ao carregar planos.");
+      setErro(""); // Limpa erros anteriores
+
+      // Busca os dados diretamente da API
+      const dados = await buscarPuro('/planos');
+
+      // Garante que o estado receba um array válido
+      setPlanos(Array.isArray(dados) ? dados : []);
+    } catch (error) {
+      setErro("Nenhum plano cadastrado.");
+      setPlanos([]);
     } finally {
       setCarregando(false);
     }
@@ -55,11 +61,17 @@ export default function ListarPlanos() {
             Cadastrar Plano
           </Link>
         </div>
-
+      
         {carregando ? (
           <div className="text-center py-10">
             <p className="text-xl font-bold animate-pulse text-morte">Carregando planos de seguro...</p>
           </div>
+        ) : erro ? (
+          <p className="bg-red-100 text-red-700 p-4 rounded-sm font-bold text-sm text-center mb-8">
+            {erro}
+          </p>
+        ) : !planos || planos.length === 0 ? (
+          <p className="text-center text-texto/60 italic">Nenhum plano cadastrado ainda.</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {planos.map((plano) => (
