@@ -24,16 +24,17 @@ function FormSeguro() {
         await buscar<PlanoSeguro[]>("/planos", setPlanos);
 
         if (id) {
-          await buscar<SeguroVida>(`/seguros/${id}`, (seguro) => {
-            setUsuarioId(String(seguro.usuario.id));
-            setPlanoId(String(seguro.planoSeguro.id));
+          // Buscamos o seguro puro do banco
+          await buscar<any>(`/seguros/${id}`, (seguro) => {
+            // Acessamos os campos IDs que estão no banco
+            setUsuarioId(String(seguro.usuarioId));
+            setPlanoId(String(seguro.planoSeguroId));
           });
         }
       } catch {
         setErro("Não foi possível carregar os dados do formulário.");
       }
     }
-
     carregarDados();
   }, [id]);
 
@@ -46,53 +47,39 @@ function FormSeguro() {
   }
 
   async function salvarSeguro(evento: FormEvent<HTMLFormElement>) {
-    evento.preventDefault();
-    setErro("");
+  evento.preventDefault();
+  setErro("");
 
-    if (!usuarioId || !planoId) {
-      setErro("Selecione um usuário e um plano.");
-      return;
-    }
-
-    const usuarioSelecionado = usuarios.find(
-      (usuario) => usuario.id === Number(usuarioId)
-    );
-
-    if (usuarioSelecionado && usuarioSelecionado.idade < 18) {
-      setErro("Usuário menor de idade não pode contratar seguro.");
-      return;
-    }
-
-    const seguro = {
-      id: editando ? Number(id) : 0,
-      usuario: {
-        id: Number(usuarioId),
-      },
-      planoSeguro: {
-        id: Number(planoId),
-      },
-    };
-
-    try {
-      if (editando) {
-        await atualizar<typeof seguro, SeguroVida>(
-          "/seguros/atualizar",
-          seguro,
-          () => {}
-        );
-      } else {
-        await cadastrar<typeof seguro, SeguroVida>(
-          "/seguros/cadastrar",
-          seguro,
-          () => {}
-        );
-      }
-
-      navigate("/seguros");
-    } catch {
-      setErro("Não foi possível salvar o seguro. Confira os dados e tente novamente.");
-    }
+  if (!usuarioId || !planoId) {
+    setErro("Selecione um usuário e um plano.");
+    return;
   }
+
+  // 1. Encontre o plano selecionado na sua lista de planos
+  const planoSelecionado = planos.find(p => String(p.id) === planoId);
+
+  // 2. Defina o valor (ou use uma regra de cálculo baseada no plano)
+  const valorDefinido = planoSelecionado ? 600 : 0; // Ajuste sua lógica aqui!
+
+  const seguro = {
+    id: editando ? String(id) : String(Date.now()),
+    usuarioId: String(usuarioId),
+    planoSeguroId: String(planoId),
+    valorMensalidade: valorDefinido, // Usa o valor real aqui
+    dataContratacao: new Date().toISOString().split('T')[0]
+  };
+
+  try {
+    if (editando) {
+      await atualizar<typeof seguro, SeguroVida>(`/seguros/${id}`, seguro, () => {});
+    } else {
+      await cadastrar<typeof seguro, SeguroVida>("/seguros", seguro, () => {});
+    }
+    navigate("/seguros");
+  } catch {
+    setErro("Não foi possível salvar.");
+  }
+}
 
   return (
     <div className="bg-fundo min-h-[calc(100vh-84px)] text-texto flex items-center justify-center py-20 px-4">
