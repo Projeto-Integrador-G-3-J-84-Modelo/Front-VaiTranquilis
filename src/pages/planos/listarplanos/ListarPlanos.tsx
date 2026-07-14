@@ -1,30 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import CardPlano from '../cardplano/CardPlano';
-
-interface Plano {
-  id: number;
-  nome: string;
-  descricao: string;
-  indenizacaoMaxima: number;
-}
+import { buscar } from '../../../services/Service'; 
+import type PlanoSeguro from '../../../models/PlanoSeguro'; 
 
 export default function ListarPlanos() {
-  const [planos, setPlanos] = useState<Plano[]>([]);
+  const [planos, setPlanos] = useState<PlanoSeguro[]>([]);
   const [carregando, setCarregando] = useState(true);
   
-  const navigate = useNavigate(); // 2. Inicialize o navigate
+  const navigate = useNavigate();
 
   const buscarPlanos = async () => {
     try {
       setCarregando(true);
-      setPlanos([
-        { id: 1, nome: "Plano Livre de Boletos", descricao: "Você parte, mas suas dívidas não te acompanham. Quitamos o que você deve para que sua única preocupação seja o descanso.", indenizacaoMaxima: 50000.00 },
-        { id: 2, nome: "Plano Herança sem Choro", descricao: "O seguro ideal para quem quer ser lembrado pelas boas lembranças e pelo saldo bancário generoso que deixou para os vivos.", indenizacaoMaxima:  250000.00 },
-        { id: 3, nome: "Plano Adeus, Mundo Cruel", descricao: "Proteção máxima para quem prefere sair de cena com estilo e garantir que a família não precise vender o carro na semana seguinte.", indenizacaoMaxima: 1000000.00 }
-      ]);
+      await buscar<PlanoSeguro[]>('/planos', setPlanos);
     } catch (erro) {
       console.error("Erro ao buscar planos:", erro);
+      alert("Erro ao carregar planos.");
     } finally {
       setCarregando(false);
     }
@@ -34,17 +26,14 @@ export default function ListarPlanos() {
     buscarPlanos();
   }, []);
 
-  // funções para lidar com edição e exclusão
   const handleEditar = (id: number) => {
     navigate(`/editar-plano/${id}`);
   };
 
-  // função para lidar com exclusão
   const handleDeletar = (id: number) => {
     navigate(`/deletar-plano/${id}`);
   };
 
-  // renderização do componente
   return (
     <div className="bg-fundo min-h-screen text-texto">
       <main className="max-w-5xl mx-auto px-6 py-20">
@@ -53,9 +42,18 @@ export default function ListarPlanos() {
           <h2 className="text-5xl font-black text-morte uppercase italic tracking-tighter">
             Nossos Planos de Proteção
           </h2>
-          <p className="text-xl text-texto/80 max-w-2xl mx-auto border-b-2 border-morte pb-6">
-            Selecione a cobertura ideal para organizar o futuro com total segurança e praticidade.
+
+          <p className="text-xl text-texto/80 max-w-2xl mx-auto border-b-2 border-morte pb-6 pt-4">
+            Organize a sua saída. O mundo não para, mas a sua tranquilidade (e a deles) você deixa garantida.
           </p>
+
+          {/* Botão de Cadastro Adicionado */}
+          <Link
+  className="mx-auto block max-w-sm w-full mt-8 px-10 py-4 bg-vida text-white text-sm font-black uppercase rounded-sm hover:bg-morte transition-all hover:scale-[1.02] shadow-lg border-b-4 border-yellow-900 block text-center"
+  to="/cadastrar-plano"
+>
+  Cadastrar Plano
+</Link>
         </div>
 
         {carregando ? (
@@ -68,7 +66,7 @@ export default function ListarPlanos() {
               <CardPlano
                 key={plano.id}
                 id={plano.id}
-                nome={plano.nome}
+                nome={plano.nomePlano} 
                 descricao={plano.descricao}
                 indenizacaoMaxima={plano.indenizacaoMaxima}
                 onEditar={handleEditar}
@@ -77,7 +75,6 @@ export default function ListarPlanos() {
             ))}
           </div>
         )}
-
       </main>
     </div>
   );

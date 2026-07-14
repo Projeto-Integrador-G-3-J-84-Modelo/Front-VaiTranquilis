@@ -1,7 +1,3 @@
-import React from 'react';
-
-// estrutura do card de plano, com título, descrição, cobertura máxima e botões de ação (editar e deletar)
-
 export interface PlanoProps {
   id: number;
   nome: string;
