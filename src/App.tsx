@@ -10,6 +10,7 @@ import LoginUsuario from './pages/loginUsuario/LoginUsuario'
 import ListarSeguros from "./components/segurovida/listarseguros/ListarSeguros";
 import FormSeguro from "./components/segurovida/formseguro/FormSeguro";
 import DeletarSeguro from "./components/segurovida/deletarseguro/DeletarSeguro";
+import PerfilUsuario from './pages/perfilUsuario/PerfilUsuario';
 
 export default function App() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
             <Route path="/deletar-plano/:id" element={<DeletarPlano />} />
             <Route path="/cadastrar-usuario" element={<CadastrarUsuario />} />
             <Route path="/login" element={<LoginUsuario />} />
+            <Route path="/perfil" element={<PerfilUsuario />} />
 
             <Route path="/seguros" element={<ListarSeguros />} />
             <Route path="/cadastrarSeguro" element={<FormSeguro />} />

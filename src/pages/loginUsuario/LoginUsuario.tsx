@@ -29,8 +29,13 @@ export default function LoginUsuario() {
         );
 
         if (usuarioAutenticado) {
+          // Salva o ID do usuário no navegador
+          localStorage.setItem('usuarioId', String(usuarioAutenticado.id));
+
           console.log("Login realizado:", usuarioAutenticado);
-          navigate('/planos'); // Redireciona se encontrar
+
+          // Redireciona para o perfil
+          navigate('/perfil');
         } else {
           setErro('E-mail ou senha incorretos.');
         }
