@@ -64,7 +64,6 @@ function FormSeguro() {
     }
 
     const seguro = {
-      id: editando ? Number(id) : 0,
       usuario: {
         id: Number(usuarioId),
       },
@@ -75,16 +74,21 @@ function FormSeguro() {
 
     try {
       if (editando) {
-        await atualizar<typeof seguro, SeguroVida>(
+        const seguroAtualizado = {
+          id: Number(id),
+          ...seguro,
+        };
+
+        await atualizar<typeof seguroAtualizado, SeguroVida>(
           "/seguros/atualizar",
-          seguro,
-          () => {}
+          seguroAtualizado,
+          () => { }
         );
       } else {
         await cadastrar<typeof seguro, SeguroVida>(
           "/seguros/cadastrar",
           seguro,
-          () => {}
+          () => { }
         );
       }
 
