@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { buscar } from '../../services/Service';
+import { buscarPuro } from '../../services/Service'; // Trocado para buscarPuro por segurança assíncrona
 import type Usuario from '../../models/Usuario';
+import { ToastAlerta } from '../../utils/ToastAlerta'; // Ajuste o caminho da pasta onde salvou seu arquivo de toast
 
 export default function LoginUsuario() {
   const [form, setForm] = useState({ email: '', senha: '' });
@@ -20,23 +21,33 @@ export default function LoginUsuario() {
     setErro('');
 
     try {
-      // 1. Busca todos os usuários do JSON Server
-      await buscar<Usuario[]>('/usuarios', (listaUsuarios: Usuario[]) => {
+      // 1. Busca todos os usuários do JSON Server usando o retorno direto seguro
+      const listaUsuarios: Usuario[] = await buscarPuro('/usuarios');
 
-        // 2. Verifica se existe algum usuário com o e-mail e senha informados
-        const usuarioAutenticado = listaUsuarios.find(
-          (user) => user.email === form.email && user.senha === form.senha
-        );
+      // Garantia caso o servidor retorne um valor inválido ou nulo
+      const usuariosValidos = Array.isArray(listaUsuarios) ? listaUsuarios : [];
 
-        if (usuarioAutenticado) {
-          console.log("Login realizado:", usuarioAutenticado);
-          navigate('/planos'); // Redireciona se encontrar
-        } else {
-          setErro('E-mail ou senha incorretos.');
-        }
-      });
+      // 2. Verifica se existe algum usuário com o e-mail e senha informados
+      const usuarioAutenticado = usuariosValidos.find(
+        (user) => user.email === form.email && user.senha === form.senha
+      );
+
+      if (usuarioAutenticado) {
+        console.log("Login realizado:", usuarioAutenticado);
+
+        // Dispara o toast de sucesso
+        ToastAlerta('Login efetuado com sucesso! Seja bem-vindo.', 'sucesso');
+
+        navigate('/planos'); // Redireciona
+      } else {
+        const mensagemErro = 'E-mail ou senha incorretos.';
+        setErro(mensagemErro);
+        ToastAlerta(mensagemErro, 'erro'); // Dispara o toast de erro
+      }
     } catch (err) {
-      setErro('Erro ao conectar com o servidor.');
+      const mensagemConexao = 'Erro ao conectar com o servidor.';
+      setErro(mensagemConexao);
+      ToastAlerta(mensagemConexao, 'erro'); // Dispara o toast de erro de conexão
     } finally {
       setCarregando(false);
     }

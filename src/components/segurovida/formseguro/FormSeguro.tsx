@@ -5,6 +5,7 @@ import type PlanoSeguro from "../../../models/PlanoSeguro";
 import type SeguroVida from "../../../models/SeguroVida";
 import type Usuario from "../../../models/Usuario";
 import { atualizar, buscar, cadastrar } from "../../../services/Service";
+import { ToastAlerta } from "../../../utils/ToastAlerta";
 
 function FormSeguro() {
   const navigate = useNavigate();
@@ -32,7 +33,9 @@ function FormSeguro() {
           });
         }
       } catch {
-        setErro("Não foi possível carregar os dados do formulário.");
+        const msgCarga = "Não foi possível carregar os dados do formulário.";
+        setErro(msgCarga);
+        ToastAlerta(msgCarga, "erro");
       }
     }
     carregarDados();

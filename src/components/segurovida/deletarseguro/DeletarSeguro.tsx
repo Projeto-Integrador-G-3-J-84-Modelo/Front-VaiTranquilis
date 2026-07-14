@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import type SeguroVida from "../../../models/SeguroVida";
 import { buscarPuro, deletar } from "../../../services/Service";
+import { ToastAlerta } from "../../../utils/ToastAlerta";
 
 function DeletarSeguro() {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ function DeletarSeguro() {
       try {
         // 1. Busca o seguro, os usuários e os planos
         const [resSeguro, resUsuarios, resPlanos] = await Promise.all([
-          buscarPuro(`/seguros/${id}`), // Crie essa função simples ou use axios direto
+          buscarPuro(`/seguros/${id}`),
           buscarPuro("/usuarios"),
           buscarPuro("/planos")
         ]);
@@ -31,7 +32,9 @@ function DeletarSeguro() {
           plano: planoEncontrado
         });
       } catch {
-        setErro("Não foi possível carregar os dados para exclusão.");
+        const msgCarga = "Não foi possível carregar os dados para exclusão.";
+        setErro(msgCarga);
+        ToastAlerta(msgCarga, "erro");
       }
     }
 

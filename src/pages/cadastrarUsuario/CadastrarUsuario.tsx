@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { cadastrar } from '../../services/Service';
 import type Usuario from '../../models/Usuario';
+import { ToastAlerta } from '../../utils/ToastAlerta';
 
 export default function CadastrarUsuario() {
   const [form, setForm] = useState({
@@ -57,12 +58,12 @@ export default function CadastrarUsuario() {
     };
 
     try {
-
       await cadastrar<Omit<Usuario, 'id'>, Usuario>('/usuarios', usuarioParaCadastro, () => {
+        ToastAlerta('Usuário cadastrado com sucesso!', 'sucesso');
         setEnviado(true);
       });
     } catch (error) {
-      alert('Erro ao cadastrar. Verifique os dados.');
+      ToastAlerta('Erro ao cadastrar. Verifique os dados.', 'erro');
       console.error(error);
     }
   }

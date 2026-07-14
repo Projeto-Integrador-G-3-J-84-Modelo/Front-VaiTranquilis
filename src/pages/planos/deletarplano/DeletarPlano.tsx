@@ -2,6 +2,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { deletar, buscar } from '../../../services/Service';
 import type PlanoSeguro from '../../../models/PlanoSeguro';
+import { ToastAlerta } from '../../../utils/ToastAlerta';
 
 export default function DeletarPlano() {
   const navigate = useNavigate();
@@ -19,11 +20,11 @@ export default function DeletarPlano() {
   const handleConfirmar = async () => {
     try {
       await deletar(`/planos/${id}`);
-      alert("Plano excluído com sucesso!");
+      ToastAlerta("Plano excluído com sucesso!", "sucesso");
       navigate('/planos');
     } catch (error) {
       console.error("Erro ao excluir o plano:", error);
-      alert("Erro ao excluir o plano.");
+      ToastAlerta("Erro ao excluir o plano.", "erro");
     }
   };
 

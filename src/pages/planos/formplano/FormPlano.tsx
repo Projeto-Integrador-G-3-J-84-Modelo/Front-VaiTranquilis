@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { cadastrar, atualizar, buscar } from '../../../services/Service';
 import type PlanoSeguro from '../../../models/PlanoSeguro';
+import { ToastAlerta } from '../../../utils/ToastAlerta';
 
 export default function FormPlano() {
   const navigate = useNavigate();
@@ -23,17 +24,21 @@ export default function FormPlano() {
   const handleSalvar = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (isEdicao) {
-      // O PUT precisa do ID na URL para o JSON Server identificar o registro
-      await atualizar<PlanoSeguro, PlanoSeguro>(`/planos/${id}`, { ...plano, id: Number(id) }, () => {
-        alert("Plano atualizado com sucesso!");
-        navigate('/planos');
-      });
-    } else {
-      await cadastrar<Omit<PlanoSeguro, 'id'>, PlanoSeguro>('/planos', plano, () => {
-        alert("Plano cadastrado com sucesso!");
-        navigate('/planos');
-      });
+    try {
+      if (isEdicao) {
+        // O PUT precisa do ID na URL para o JSON Server identificar o registro
+        await atualizar<PlanoSeguro, PlanoSeguro>(`/planos/${id}`, { ...plano, id: Number(id) }, () => {
+          ToastAlerta("Plano atualizado com sucesso!", "sucesso");
+          navigate('/planos');
+        });
+      } else {
+        await cadastrar<Omit<PlanoSeguro, 'id'>, PlanoSeguro>('/planos', plano, () => {
+          ToastAlerta("Plano cadastrado com sucesso!", "sucesso");
+          navigate('/planos');
+        });
+      }
+    } catch (error) {
+      ToastAlerta("Erro ao salvar as informações do plano.", "erro");
     }
   };
 
