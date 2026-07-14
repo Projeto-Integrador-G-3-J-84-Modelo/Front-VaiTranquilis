@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 export default function CadastrarUsuario() {
   const [form, setForm] = useState({
@@ -85,12 +86,12 @@ export default function CadastrarUsuario() {
               <p className="text-sm text-texto/60 italic">
                 Bem-vindo à família VaiTranquilis. Agora pode descansar.
               </p>
-              <a
-                href="/"
-                className="inline-block mt-4 bg-vida text-white px-8 py-3 text-sm font-black uppercase rounded-sm hover:bg-morte transition-all hover:scale-105 shadow-md border-b-4 border-yellow-900"
-              >
-                Ver planos
-              </a>
+          <Link
+  to="/planos"
+  className="inline-block mt-4 bg-vida text-white px-8 py-3 text-sm font-black uppercase rounded-sm hover:bg-morte transition-all hover:scale-105 shadow-md border-b-4 border-morte/20"
+>
+  Ver planos
+</Link>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-5">

@@ -19,7 +19,10 @@ export function Navbar() {
 
         {/* Links Desktop */}
         <div className="hidden md:flex items-center gap-8 font-bold">
-          <a href="/planos" className="hover:text-destaque transition-colors uppercase text-sm tracking-widest">Planos</a>
+        {/* alterei apenas o link de planos para ficar bonitinho */}
+  <a href="/planos" className="inline-block hover:text-destaque transition-all hover:scale-105 uppercase text-sm tracking-widest cursor-pointer">
+          Planos
+         </a>
           <a href="/seguros" className="hover:text-destaque transition-colors uppercase text-sm tracking-widest">Seguros</a>
           <Link to="/login" className="bg-white text-morte px-6 py-2 rounded-sm font-black uppercase hover:bg-white transition-all transform hover:scale-105 shadow-md">
           Login
