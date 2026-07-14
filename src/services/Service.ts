@@ -31,7 +31,6 @@ export const deletar = async (url: string) => {
   await api.delete(url);
 };
 
-// Em Service.ts
 export const buscarPuro = async (url: string) => {
   const resposta = await api.get(url);
   return resposta.data;

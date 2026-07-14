@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import CardPlano from '../cardplano/CardPlano';
-import { buscar } from '../../../services/Service'; 
-import type PlanoSeguro from '../../../models/PlanoSeguro'; 
+import { buscar } from '../../../services/Service';
+import type PlanoSeguro from '../../../models/PlanoSeguro';
 
 export default function ListarPlanos() {
   const [planos, setPlanos] = useState<PlanoSeguro[]>([]);
   const [carregando, setCarregando] = useState(true);
-  
+
   const navigate = useNavigate();
 
   const buscarPlanos = async () => {
@@ -37,7 +37,7 @@ export default function ListarPlanos() {
   return (
     <div className="bg-fundo min-h-screen text-texto">
       <main className="max-w-5xl mx-auto px-6 py-20">
-        
+
         <div className="text-center space-y-4 mb-16">
           <h2 className="text-5xl font-black text-morte uppercase italic tracking-tighter">
             Nossos Planos de Proteção
@@ -49,11 +49,11 @@ export default function ListarPlanos() {
 
           {/* Botão de Cadastro Adicionado */}
           <Link
-  className="mx-auto block max-w-sm w-full mt-8 px-10 py-4 bg-vida text-white text-sm font-black uppercase rounded-sm hover:bg-morte transition-all hover:scale-[1.02] shadow-lg border-b-4 border-yellow-900 block text-center"
-  to="/cadastrar-plano"
->
-  Cadastrar Plano
-</Link>
+            className="mx-auto block max-w-sm w-full mt-8 px-10 py-4 bg-vida text-white text-sm font-black uppercase rounded-sm hover:bg-morte transition-all hover:scale-[1.02] shadow-lg border-b-4 border-yellow-900 block text-center"
+            to="/cadastrar-plano"
+          >
+            Cadastrar Plano
+          </Link>
         </div>
 
         {carregando ? (
@@ -66,7 +66,7 @@ export default function ListarPlanos() {
               <CardPlano
                 key={plano.id}
                 id={plano.id}
-                nome={plano.nomePlano} 
+                nome={plano.nomePlano}
                 descricao={plano.descricao}
                 indenizacaoMaxima={plano.indenizacaoMaxima}
                 onEditar={handleEditar}

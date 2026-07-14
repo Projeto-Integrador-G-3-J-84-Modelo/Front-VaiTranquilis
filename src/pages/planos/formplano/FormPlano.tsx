@@ -43,32 +43,32 @@ export default function FormPlano() {
         <h2 className="text-3xl font-black text-morte uppercase italic mb-6 border-b-2 border-morte/10 pb-2">
           {isEdicao ? `Editar Plano (${id})` : 'Cadastrar Plano'}
         </h2>
-        
+
         <form className="space-y-4" onSubmit={handleSalvar}>
           <div>
             <label className="block text-xs uppercase font-black text-morte mb-1">Nome do Plano</label>
-            <input 
-              value={plano.nomePlano} 
-              onChange={(e) => setPlano({...plano, nomePlano: e.target.value})}
-              type="text" className="w-full border-2 border-morte/20 p-2 rounded-sm focus:border-vida outline-none" required 
+            <input
+              value={plano.nomePlano}
+              onChange={(e) => setPlano({ ...plano, nomePlano: e.target.value })}
+              type="text" className="w-full border-2 border-morte/20 p-2 rounded-sm focus:border-vida outline-none" required
             />
           </div>
 
           <div>
             <label className="block text-xs uppercase font-black text-morte mb-1">Descrição</label>
-            <textarea 
+            <textarea
               value={plano.descricao}
-              onChange={(e) => setPlano({...plano, descricao: e.target.value})}
-              className="w-full border-2 border-morte/20 p-2 rounded-sm focus:border-vida outline-none h-24 resize-none" required 
+              onChange={(e) => setPlano({ ...plano, descricao: e.target.value })}
+              className="w-full border-2 border-morte/20 p-2 rounded-sm focus:border-vida outline-none h-24 resize-none" required
             />
           </div>
 
           <div>
             <label className="block text-xs uppercase font-black text-morte mb-1">Indenização Máxima (R$)</label>
-            <input 
+            <input
               value={plano.indenizacaoMaxima}
-              onChange={(e) => setPlano({...plano, indenizacaoMaxima: Number(e.target.value)})}
-              type="number" className="w-full border-2 border-morte/20 p-2 rounded-sm focus:border-vida outline-none" required 
+              onChange={(e) => setPlano({ ...plano, indenizacaoMaxima: Number(e.target.value) })}
+              type="number" className="w-full border-2 border-morte/20 p-2 rounded-sm focus:border-vida outline-none" required
             />
           </div>
 

@@ -2,29 +2,29 @@ export default function Home() {
   return (
     <div className="bg-fundo min-h-screen text-texto">
       <main className="max-w-5xl mx-auto px-6 py-20">
-        
+
         {/* Seção Hero */}
         <section className="text-center space-y-8 py-16 relative">
           {/* Badge de Autoridade */}
           <div className="inline-block bg-morte/10 text-morte px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-4 italic border border-morte/20">
             Líder em tranquilidade desde 2026
           </div>
-          
+
           <h1 className="text-7xl font-black text-morte uppercase italic leading-none tracking-tighter">
-            A vida é curta. <br/> A paz é eterna.
+            A vida é curta. <br /> A paz é eterna.
           </h1>
-          
+
           <p className="text-xl text-texto/80 max-w-2xl mx-auto border-b-2 border-morte pb-8">
-            Você não vai levar nada, mas pode deixar tudo organizado. 
+            Você não vai levar nada, mas pode deixar tudo organizado.
             Contrate o seguro que garante que sua partida seja tão tranquila quanto uma soneca.
           </p>
-          
-           <a 
-  href="/cadastrar-usuario" 
-  className="bg-vida text-white px-12 py-5 text-lg font-black uppercase rounded-sm hover:bg-morte transition-all hover:scale-105 shadow-lg inline-block text-center"
->
-  Garantir minha tranquilidade
-</a>
+
+          <a
+            href="/cadastrar-usuario"
+            className="bg-vida text-white px-12 py-5 text-lg font-black uppercase rounded-sm hover:bg-morte transition-all hover:scale-105 shadow-lg inline-block text-center"
+          >
+            Garantir minha tranquilidade
+          </a>
         </section>
 
         {/* O Fluxo de Partida */}

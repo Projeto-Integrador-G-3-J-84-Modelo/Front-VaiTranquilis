@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { deletar, buscar } from '../../../services/Service';
-import type PlanoSeguro from '../../../models/PlanoSeguro'; 
+import type PlanoSeguro from '../../../models/PlanoSeguro';
 
 export default function DeletarPlano() {
   const navigate = useNavigate();
@@ -37,14 +37,14 @@ export default function DeletarPlano() {
           Tem certeza que deseja apagar o plano <span className="font-bold text-red-700">{nomePlano || '...'}</span>? Esta ação não poderá ser desfeita.
         </p>
         <div className="flex gap-4 max-w-xs mx-auto">
-          <button 
-            onClick={handleConfirmar} 
+          <button
+            onClick={handleConfirmar}
             className="flex-1 bg-red-700 text-white py-3 font-black uppercase text-xs tracking-wider hover:bg-red-800 transition-all hover:scale-105 cursor-pointer shadow-md"
           >
             Confirmar
           </button>
-          <button 
-            onClick={() => navigate(-1)} 
+          <button
+            onClick={() => navigate(-1)}
             className="flex-1 border-2 border-morte text-morte py-3 font-black uppercase text-xs tracking-wider hover:bg-morte hover:text-white transition-all hover:scale-105 cursor-pointer"
           >
             Cancelar

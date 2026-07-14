@@ -10,33 +10,33 @@ function DeletarSeguro() {
   const [erro, setErro] = useState("");
 
   useEffect(() => {
-  async function carregarDados() {
-    if (!id) return;
+    async function carregarDados() {
+      if (!id) return;
 
-    try {
-      // 1. Busca o seguro, os usuários e os planos
-      const [resSeguro, resUsuarios, resPlanos] = await Promise.all([
-        buscarPuro(`/seguros/${id}`), // Crie essa função simples ou use axios direto
-        buscarPuro("/usuarios"),
-        buscarPuro("/planos")
-      ]);
+      try {
+        // 1. Busca o seguro, os usuários e os planos
+        const [resSeguro, resUsuarios, resPlanos] = await Promise.all([
+          buscarPuro(`/seguros/${id}`), // Crie essa função simples ou use axios direto
+          buscarPuro("/usuarios"),
+          buscarPuro("/planos")
+        ]);
 
-      // 2. Faz o "Join" manualmente
-      const usuarioEncontrado = resUsuarios.find((u: any) => String(u.id) === String(resSeguro.usuarioId));
-      const planoEncontrado = resPlanos.find((p: any) => String(p.id) === String(resSeguro.planoSeguroId));
+        // 2. Faz o "Join" manualmente
+        const usuarioEncontrado = resUsuarios.find((u: any) => String(u.id) === String(resSeguro.usuarioId));
+        const planoEncontrado = resPlanos.find((p: any) => String(p.id) === String(resSeguro.planoSeguroId));
 
-      setSeguro({
-        ...resSeguro,
-        usuario: usuarioEncontrado,
-        plano: planoEncontrado
-      });
-    } catch {
-      setErro("Não foi possível carregar os dados para exclusão.");
+        setSeguro({
+          ...resSeguro,
+          usuario: usuarioEncontrado,
+          plano: planoEncontrado
+        });
+      } catch {
+        setErro("Não foi possível carregar os dados para exclusão.");
+      }
     }
-  }
 
-  carregarDados();
-}, [id]);
+    carregarDados();
+  }, [id]);
 
   async function confirmarExclusao() {
     if (!id) return;

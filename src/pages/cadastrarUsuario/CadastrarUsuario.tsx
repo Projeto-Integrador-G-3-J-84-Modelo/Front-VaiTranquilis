@@ -57,10 +57,10 @@ export default function CadastrarUsuario() {
     };
 
     try {
-      
-     await cadastrar<Omit<Usuario, 'id'>, Usuario>('/usuarios', usuarioParaCadastro, () => {
-  setEnviado(true);
-});
+
+      await cadastrar<Omit<Usuario, 'id'>, Usuario>('/usuarios', usuarioParaCadastro, () => {
+        setEnviado(true);
+      });
     } catch (error) {
       alert('Erro ao cadastrar. Verifique os dados.');
       console.error(error);

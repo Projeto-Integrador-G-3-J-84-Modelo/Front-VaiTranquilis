@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { buscar } from '../../services/Service'; 
-import type Usuario  from '../../models/Usuario';  
+import { buscar } from '../../services/Service';
+import type Usuario from '../../models/Usuario';
 
 export default function LoginUsuario() {
   const [form, setForm] = useState({ email: '', senha: '' });
@@ -22,7 +22,7 @@ export default function LoginUsuario() {
     try {
       // 1. Busca todos os usuários do JSON Server
       await buscar<Usuario[]>('/usuarios', (listaUsuarios: Usuario[]) => {
-        
+
         // 2. Verifica se existe algum usuário com o e-mail e senha informados
         const usuarioAutenticado = listaUsuarios.find(
           (user) => user.email === form.email && user.senha === form.senha

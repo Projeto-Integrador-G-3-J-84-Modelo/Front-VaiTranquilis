@@ -13,36 +13,36 @@ function ListarSeguros() {
   const [termoBusca, setTermoBusca] = useState("");
   const [tipoBusca, setTipoBusca] = useState("usuario");
 
- async function carregarSeguros() {
-  try {
-    setCarregando(true);
-    
-    // 1. Criamos variáveis locais para receber os dados
-    let segurosDados: any[] = [];
-    let usuariosDados: any[] = [];
-    let planosDados: any[] = [];
+  async function carregarSeguros() {
+    try {
+      setCarregando(true);
 
-    // 2. Usamos o seu Service.ts para buscar os dados
-    await buscar("/seguros", (dados: any[]) => segurosDados = dados);
-    await buscar("/usuarios", (dados: any[]) => usuariosDados = dados);
-    await buscar("/planos", (dados: any[]) => planosDados = dados);
+      // 1. Criamos variáveis locais para receber os dados
+      let segurosDados: any[] = [];
+      let usuariosDados: any[] = [];
+      let planosDados: any[] = [];
 
-    // 3. Montagem manual (O Join)
-    const segurosComDados = segurosDados.map((seguro) => ({
-      ...seguro,
-      usuario: usuariosDados.find((u) => String(u.id) === String(seguro.usuarioId)),
-      plano: planosDados.find((p) => String(p.id) === String(seguro.planoSeguroId))
-    }));
+      // 2. Usamos o seu Service.ts para buscar os dados
+      await buscar("/seguros", (dados: any[]) => segurosDados = dados);
+      await buscar("/usuarios", (dados: any[]) => usuariosDados = dados);
+      await buscar("/planos", (dados: any[]) => planosDados = dados);
 
-    setSeguros(segurosComDados);
-    setListaOriginal(segurosComDados);
-    
-  } catch (error) {
-    setErro("Não foi possível carregar os seguros.");
-  } finally {
-    setCarregando(false);
+      // 3. Montagem manual (O Join)
+      const segurosComDados = segurosDados.map((seguro) => ({
+        ...seguro,
+        usuario: usuariosDados.find((u) => String(u.id) === String(seguro.usuarioId)),
+        plano: planosDados.find((p) => String(p.id) === String(seguro.planoSeguroId))
+      }));
+
+      setSeguros(segurosComDados);
+      setListaOriginal(segurosComDados);
+
+    } catch (error) {
+      setErro("Não foi possível carregar os seguros.");
+    } finally {
+      setCarregando(false);
+    }
   }
-}
 
   useEffect(() => {
     carregarSeguros();
@@ -65,7 +65,7 @@ function ListarSeguros() {
     }
 
     const termo = termoBusca.toLowerCase();
-    
+
     // Filtramos localmente a lista que já está carregada na memória
     const filtrados = listaOriginal.filter((s) => {
       if (tipoBusca === "usuario") {
@@ -110,11 +110,11 @@ function ListarSeguros() {
           </p>
 
           <Link
-  className="mx-auto block max-w-sm w-full mt-8 px-10 py-4 bg-vida text-white text-sm font-black uppercase rounded-sm hover:bg-morte transition-all hover:scale-[1.02] shadow-lg border-b-4 border-yellow-900 block text-center"
-  to="/cadastrarSeguro"
->
-  Cadastrar Seguro
-</Link>
+            className="mx-auto block max-w-sm w-full mt-8 px-10 py-4 bg-vida text-white text-sm font-black uppercase rounded-sm hover:bg-morte transition-all hover:scale-[1.02] shadow-lg border-b-4 border-yellow-900 block text-center"
+            to="/cadastrarSeguro"
+          >
+            Cadastrar Seguro
+          </Link>
         </div>
 
         <form
