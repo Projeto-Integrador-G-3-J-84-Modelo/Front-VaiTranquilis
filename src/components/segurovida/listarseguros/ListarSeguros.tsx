@@ -7,6 +7,7 @@ import { buscar } from "../../../services/Service";
 
 function ListarSeguros() {
   const [seguros, setSeguros] = useState<SeguroVida[]>([]);
+  const [listaOriginal, setListaOriginal] = useState<SeguroVida[]>([]); // Guarda a lista completa
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
   const [termoBusca, setTermoBusca] = useState("");
@@ -15,9 +16,28 @@ function ListarSeguros() {
   async function carregarSeguros() {
     try {
       setCarregando(true);
-      setErro("");
-      await buscar<SeguroVida[]>("/seguros", setSeguros);
-    } catch {
+
+      // 1. Criamos variáveis locais para receber os dados
+      let segurosDados: any[] = [];
+      let usuariosDados: any[] = [];
+      let planosDados: any[] = [];
+
+      // 2. Usamos o seu Service.ts para buscar os dados
+      await buscar("/seguros", (dados: any[]) => segurosDados = dados);
+      await buscar("/usuarios", (dados: any[]) => usuariosDados = dados);
+      await buscar("/planos", (dados: any[]) => planosDados = dados);
+
+      // 3. Montagem manual (O Join)
+      const segurosComDados = segurosDados.map((seguro) => ({
+        ...seguro,
+        usuario: usuariosDados.find((u) => String(u.id) === String(seguro.usuarioId)),
+        plano: planosDados.find((p) => String(p.id) === String(seguro.planoSeguroId))
+      }));
+
+      setSeguros(segurosComDados);
+      setListaOriginal(segurosComDados);
+
+    } catch (error) {
       setErro("Não foi possível carregar os seguros.");
     } finally {
       setCarregando(false);
@@ -36,36 +56,32 @@ function ListarSeguros() {
     setTipoBusca(evento.target.value);
   }
 
-  async function pesquisarSeguros(evento: FormEvent<HTMLFormElement>) {
+  function pesquisarSeguros(evento: FormEvent<HTMLFormElement>) {
     evento.preventDefault();
 
     if (!termoBusca.trim()) {
-      carregarSeguros();
+      setSeguros(listaOriginal);
       return;
     }
 
-    const termoFormatado = encodeURIComponent(termoBusca.trim());
+    const termo = termoBusca.toLowerCase();
 
-  const endpoint =
-  tipoBusca === "usuario"
-    ? `/seguros/usuarios/${termoFormatado}`
-    : `/seguros/planos/${termoFormatado}`;
+    // Filtramos localmente a lista que já está carregada na memória
+    const filtrados = listaOriginal.filter((s) => {
+      if (tipoBusca === "usuario") {
+        return s.usuario?.nome?.toLowerCase().includes(termo);
+      } else {
+        return s.plano?.nomePlano?.toLowerCase().includes(termo);
+      }
+    });
 
-    try {
-      setCarregando(true);
-      setErro("");
-      await buscar<SeguroVida[]>(endpoint, setSeguros);
-    } catch {
-      setErro("Não foi possível buscar os seguros.");
-    } finally {
-      setCarregando(false);
-    }
+    setSeguros(filtrados);
   }
 
   function limparBusca() {
     setTermoBusca("");
     setTipoBusca("usuario");
-    carregarSeguros();
+    setSeguros(listaOriginal); // Restaura a lista original sem precisar buscar no servidor
   }
 
   if (carregando) {
@@ -84,20 +100,17 @@ function ListarSeguros() {
     <div className="bg-fundo min-h-screen text-texto">
       <main className="max-w-5xl mx-auto px-6 py-20">
         <div className="text-center space-y-4 mb-12">
-          <div className="inline-block bg-morte/10 text-morte px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-4 italic border border-morte/20">
-            Seguros contratados
-          </div>
 
           <h1 className="text-5xl font-black text-morte uppercase italic tracking-tighter">
             Lista de Seguros
           </h1>
 
           <p className="text-xl text-texto/80 max-w-2xl mx-auto border-b-2 border-morte pb-6">
-            Veja quais usuários já estão vinculados a um plano de proteção.
+            O inventário de quem já se antecipou ao inevitável.
           </p>
 
           <Link
-            className="inline-block bg-vida text-white px-8 py-4 text-sm font-black uppercase rounded-sm hover:bg-morte transition-all hover:scale-105 shadow-lg border-b-4 border-green-800 no-underline"
+            className="mx-auto block max-w-sm w-full mt-8 px-10 py-4 bg-vida text-white text-sm font-black uppercase rounded-sm hover:bg-morte transition-all hover:scale-[1.02] shadow-lg border-b-4 border-yellow-900 block text-center"
             to="/cadastrarSeguro"
           >
             Cadastrar Seguro

@@ -1,14 +1,13 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { buscar } from '../../services/Service';
+import type Usuario from '../../models/Usuario';
 
 export default function LoginUsuario() {
-  const [form, setForm] = useState({
-    email: '',
-    senha: '',
-  });
-
+  const [form, setForm] = useState({ email: '', senha: '' });
   const [erro, setErro] = useState('');
   const [carregando, setCarregando] = useState(false);
+  const navigate = useNavigate();
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -21,12 +20,23 @@ export default function LoginUsuario() {
     setErro('');
 
     try {
-      console.log(form);
+      // 1. Busca todos os usuários do JSON Server
+      await buscar<Usuario[]>('/usuarios', (listaUsuarios: Usuario[]) => {
 
-      await new Promise((resolve) => setTimeout(resolve, 800));
+        // 2. Verifica se existe algum usuário com o e-mail e senha informados
+        const usuarioAutenticado = listaUsuarios.find(
+          (user) => user.email === form.email && user.senha === form.senha
+        );
 
+        if (usuarioAutenticado) {
+          console.log("Login realizado:", usuarioAutenticado);
+          navigate('/planos'); // Redireciona se encontrar
+        } else {
+          setErro('E-mail ou senha incorretos.');
+        }
+      });
     } catch (err) {
-      setErro('Dados incorretos.');
+      setErro('Erro ao conectar com o servidor.');
     } finally {
       setCarregando(false);
     }
@@ -35,25 +45,20 @@ export default function LoginUsuario() {
   return (
     <div className="bg-fundo min-h-screen text-texto">
       <main className="max-w-xl mx-auto px-6 py-20">
-
         <section className="text-center space-y-4 mb-12">
           <div className="inline-block bg-morte/10 text-morte px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest italic border border-morte/20">
             Já garantiu sua tranquilidade
           </div>
-
           <h1 className="text-5xl font-black text-morte uppercase italic leading-none tracking-tighter">
             Que bom <br /> te ver <br /> por aqui
           </h1>
-
           <p className="text-base text-texto/70 max-w-sm mx-auto border-b-2 border-morte/20 pb-6">
             Por enquanto.
           </p>
         </section>
 
         <div className="bg-white border-l-4 border-vida shadow-xl p-8 space-y-6">
-
           <form onSubmit={handleSubmit} className="space-y-5">
-
             {erro && (
               <div className="bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-sm">
                 {erro}
@@ -61,9 +66,7 @@ export default function LoginUsuario() {
             )}
 
             <div className="space-y-1">
-              <label className="text-xs font-black uppercase tracking-widest text-morte">
-                E-mail
-              </label>
+              <label className="text-xs font-black uppercase tracking-widest text-morte">E-mail</label>
               <input
                 type="email"
                 name="email"
@@ -75,9 +78,7 @@ export default function LoginUsuario() {
             </div>
 
             <div className="space-y-1">
-              <label className="text-xs font-black uppercase tracking-widest text-morte">
-                Senha
-              </label>
+              <label className="text-xs font-black uppercase tracking-widest text-morte">Senha</label>
               <input
                 type="password"
                 name="senha"
@@ -118,7 +119,6 @@ export default function LoginUsuario() {
             ← Voltar para a home
           </Link>
         </div>
-
       </main>
     </div>
   );

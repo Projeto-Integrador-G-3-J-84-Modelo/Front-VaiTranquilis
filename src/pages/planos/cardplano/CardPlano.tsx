@@ -1,7 +1,3 @@
-import React from 'react';
-
-// estrutura do card de plano, com título, descrição, cobertura máxima e botões de ação (editar e deletar)
-
 export interface PlanoProps {
   id: number;
   nome: string;
@@ -20,7 +16,7 @@ export default function CardPlano({ id, nome, descricao, indenizacaoMaxima, onEd
         <h3 className="text-2xl font-black text-morte uppercase tracking-tight mb-3">
           {nome}
         </h3>
-        
+
         {/* Descrição */}
         <p className="text-texto/80 text-sm mb-6 leading-relaxed">
           {descricao}
@@ -38,22 +34,22 @@ export default function CardPlano({ id, nome, descricao, indenizacaoMaxima, onEd
           </span>
         </div>
 
-       {/* Botões de Ação com efeito de Zoom */}
-<div className="flex gap-3">
-  <button 
-    onClick={() => onEditar(id)}
-    className="flex-grow bg-vida text-white py-2.5 px-4 rounded-sm font-black uppercase text-xs hover:bg-morte transition-all hover:scale-105 cursor-pointer shadow-md"
-  >
-    Editar
-  </button>
-  
-  <button 
-    onClick={() => onDeletar(id)}
-    className="flex-grow border-2 border-morte text-morte py-2.5 px-4 rounded-sm font-black uppercase text-xs hover:bg-morte hover:text-white transition-all hover:scale-105 cursor-pointer"
-  >
-    Deletar
-  </button>
-</div>
+        {/* Botões de Ação com efeito de Zoom */}
+        <div className="flex gap-3">
+          <button
+            onClick={() => onEditar(id)}
+            className="flex-grow bg-vida text-white py-2.5 px-4 rounded-sm font-black uppercase text-xs hover:bg-morte transition-all hover:scale-105 cursor-pointer shadow-md"
+          >
+            Editar
+          </button>
+
+          <button
+            onClick={() => onDeletar(id)}
+            className="flex-grow border-2 border-morte text-morte py-2.5 px-4 rounded-sm font-black uppercase text-xs hover:bg-morte hover:text-white transition-all hover:scale-105 cursor-pointer"
+          >
+            Deletar
+          </button>
+        </div>
       </div>
     </div>
   );

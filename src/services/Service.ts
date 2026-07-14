@@ -1,13 +1,10 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL ?? "http://localhost:8080",
+  baseURL: import.meta.env.VITE_API_URL
 });
 
-export const buscar = async <T>(
-  url: string,
-  setDados: (dados: T) => void
-) => {
+export const buscar = async <T>(url: string, setDados: (dados: T) => void) => {
   const resposta = await api.get<T>(url);
   setDados(resposta.data);
 };
@@ -32,6 +29,11 @@ export const atualizar = async <TEntrada, TResposta>(
 
 export const deletar = async (url: string) => {
   await api.delete(url);
+};
+
+export const buscarPuro = async (url: string) => {
+  const resposta = await api.get(url);
+  return resposta.data;
 };
 
 export default api;

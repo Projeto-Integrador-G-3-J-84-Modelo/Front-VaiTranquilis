@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import type SeguroVida from "../../../models/SeguroVida";
-import { buscar, deletar } from "../../../services/Service";
+import { buscarPuro, deletar } from "../../../services/Service";
 
 function DeletarSeguro() {
   const navigate = useNavigate();
@@ -10,17 +10,32 @@ function DeletarSeguro() {
   const [erro, setErro] = useState("");
 
   useEffect(() => {
-    async function carregarSeguro() {
+    async function carregarDados() {
       if (!id) return;
 
       try {
-        await buscar<SeguroVida>(`/seguros/${id}`, setSeguro);
+        // 1. Busca o seguro, os usuários e os planos
+        const [resSeguro, resUsuarios, resPlanos] = await Promise.all([
+          buscarPuro(`/seguros/${id}`), // Crie essa função simples ou use axios direto
+          buscarPuro("/usuarios"),
+          buscarPuro("/planos")
+        ]);
+
+        // 2. Faz o "Join" manualmente
+        const usuarioEncontrado = resUsuarios.find((u: any) => String(u.id) === String(resSeguro.usuarioId));
+        const planoEncontrado = resPlanos.find((p: any) => String(p.id) === String(resSeguro.planoSeguroId));
+
+        setSeguro({
+          ...resSeguro,
+          usuario: usuarioEncontrado,
+          plano: planoEncontrado
+        });
       } catch {
-        setErro("Não foi possível carregar o seguro selecionado.");
+        setErro("Não foi possível carregar os dados para exclusão.");
       }
     }
 
-    carregarSeguro();
+    carregarDados();
   }, [id]);
 
   async function confirmarExclusao() {
@@ -55,10 +70,10 @@ function DeletarSeguro() {
           <>
             <p className="text-texto/80 text-sm mb-3 max-w-sm mx-auto">
               Tem certeza que deseja apagar o seguro de{" "}
-              <strong className="text-red-700">{seguro.usuario.nome}</strong> no
+              <strong className="text-red-700">{seguro.usuario?.nome}</strong> no
               plano{" "}
               <strong className="text-red-700">
-                {seguro.planoSeguro.nomePlano}
+                {seguro.plano.nomePlano}
               </strong>
               ?
             </p>

@@ -24,16 +24,17 @@ function FormSeguro() {
         await buscar<PlanoSeguro[]>("/planos", setPlanos);
 
         if (id) {
-          await buscar<SeguroVida>(`/seguros/${id}`, (seguro) => {
-            setUsuarioId(String(seguro.usuario.id));
-            setPlanoId(String(seguro.planoSeguro.id));
+          // Buscamos o seguro puro do banco
+          await buscar<any>(`/seguros/${id}`, (seguro) => {
+            // Acessamos os campos IDs que estão no banco
+            setUsuarioId(String(seguro.usuarioId));
+            setPlanoId(String(seguro.planoSeguroId));
           });
         }
       } catch {
         setErro("Não foi possível carregar os dados do formulário.");
       }
     }
-
     carregarDados();
   }, [id]);
 
@@ -54,14 +55,11 @@ function FormSeguro() {
       return;
     }
 
-    const usuarioSelecionado = usuarios.find(
-      (usuario) => usuario.id === Number(usuarioId)
-    );
+    // 1. Encontre o plano selecionado na sua lista de planos
+    const planoSelecionado = planos.find(p => String(p.id) === planoId);
 
-    if (usuarioSelecionado && usuarioSelecionado.idade < 18) {
-      setErro("Usuário menor de idade não pode contratar seguro.");
-      return;
-    }
+    // 2. Defina o valor (ou use uma regra de cálculo baseada no plano)
+    const valorDefinido = planoSelecionado ? 600 : 0; // Ajuste sua lógica aqui!
 
     const seguro = {
       usuario: {
@@ -91,10 +89,9 @@ function FormSeguro() {
           () => { }
         );
       }
-
       navigate("/seguros");
     } catch {
-      setErro("Não foi possível salvar o seguro. Confira os dados e tente novamente.");
+      setErro("Não foi possível salvar.");
     }
   }
 

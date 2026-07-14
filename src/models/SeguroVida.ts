@@ -5,6 +5,6 @@ export default interface SeguroVida {
   id: number;
   valorMensalidade: number;
   dataContratacao: string;
-  planoSeguro: PlanoSeguro;
+  plano: PlanoSeguro;
   usuario: Usuario;
 }
